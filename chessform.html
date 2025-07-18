@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Tournament Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .radio-option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .radio-option input[type="radio"]:checked + span {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .category-info {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .category-info h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .category-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .category-info li {
+            padding: 3px 0;
+            color: #34495e;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .upload-container {
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+        }
+
+        .upload-container:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-container input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .upload-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .upload-info p {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+            
+            .radio-option {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>♟️ Chess Tournament Registration</h1>
+            <p>Register for the upcoming chess championship</p>
+        </div>
+
+        <div class="form-section">
+            <form id="chessRegistrationForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name of Participant <span class="required">*</span></label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <div class="help-text">Firstname Middlename Lastname. Example - Bhagirath Pakajbhai Pancholi</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Age Category <span class="required">*</span></label>
+                    <div class="category-info">
+                        <h4>Age Category Eligibility:</h4>
+                        <ul>
+                            <li><strong>Under 9:</strong> Born on or after January 1, 2016</li>
+                            <li><strong>Under 12:</strong> Born on or after January 1, 2013</li>
+                            <li><strong>Under 15:</strong> Born on or after January 1, 2010</li>
+                            <li><strong>Open:</strong> All ages are eligible</li>
+                        </ul>
+                    </div>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="ageCategory" value="U-9 (Born on or after 01-01-2016)" required>
+                            <span>U-9 (Born on or after 01-01-2016)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="ageCategory" value="U-12 (Born on or after 01-01-2013)" required>
+                            <span>U-12 (Born on or after 01-01-2013)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="ageCategory" value="U-15 (Born on or after 01-01-2010)" required>
+                            <span>U-15 (Born on or after 01-01-2010)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="ageCategory" value="Open Category (All ages)" required>
+                            <span>Open Category (All ages)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City <span class="required">*</span></label>
+                    <textarea id="city" name="city" rows="2" required></textarea>
+                    <div class="help-text">Example - Surendranagar</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="Male" required>
+                            <span>Male</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="Female" required>
+                            <span>Female</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="Prefer not to say" required>
+                            <span>Prefer not to say</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fideRating">FIDE Rated Player ID & Rating</label>
+                    <input type="text" id="fideRating" name="fideRating">
+                    <div class="help-text">If you are FIDE rated player then write recent rating. Write "0" if you are not FIDE rated player. FIDE RATED players means Internationally recognized measure of a player's strength.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsappNumber">WhatsApp Mobile Number <span class="required">*</span></label>
+                    <input type="text" id="whatsappNumber" name="whatsappNumber" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tournament Fees Paid? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="feesPaid" value="Yes" required>
+                            <span>Yes</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="feesPaid" value="No" required>
+                            <span>No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentScreenshot">Upload Tournament Fees Payment Screenshot <span class="required">*</span></label>
+                    <div class="upload-container">
+                        <input type="file" id="paymentScreenshot" name="paymentScreenshot" accept="image/*,.pdf" required>
+                        <div class="upload-info">
+                            <p><strong>🏆 Tournament Entry Fee: ₹500</strong></p>
+                            <p><em>(Includes breakfast, lunch, and heavy afternoon tea for the player)</em></p>
+                            <p><strong>👥 Charges for Player's Companion/Parents: ₹180 per person</strong></p>
+                            <p><em>(Includes breakfast, lunch, and heavy afternoon tea)</em></p>
+                            <p><strong>💡 If possible, please combine the player's fee and additional meal charges into a single payment for convenience.</strong></p>
+                            <p><strong>🎮 Let the games begin! 🏆</strong></p>
+                        </div>
+                    </div>
+                    <div class="help-text">Please upload a screenshot or image of your payment confirmation. Accepted formats: JPG, PNG, PDF (Max 10MB)</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Would Parents Like to Join for Lunch?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="parentsLunch" value="Yes">
+                            <span>Yes</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="parentsLunch" value="No">
+                            <span>No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="parentsCount">If Yes, How Many Parents Will Join?</label>
+                    <input type="text" id="parentsCount" name="parentsCount">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email ID</label>
+                    <input type="email" id="email" name="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="schoolName">School Name with City</label>
+                    <input type="text" id="schoolName" name="schoolName">
+                </div>
+
+                <button type="submit" class="submit-btn">Register for Tournament</button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Submitting your registration...</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <h3>Registration Successful! 🎉</h3>
+                <p>Thank you for registering for the chess tournament. You will receive a confirmation shortly.</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <h3>Registration Failed</h3>
+                <p id="errorText">Please try again or contact support.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('chessRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const loading = document.getElementById('loading');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading
+            loading.style.display = 'block';
+            
+            // Prepare data for submission
+            const data = {
+                fullName: formData.get('fullName'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                ageCategory: formData.get('ageCategory'),
+                city: formData.get('city'),
+                gender: formData.get('gender'),
+                fideRating: formData.get('fideRating') || '0',
+                whatsappNumber: formData.get('whatsappNumber'),
+                feesPaid: formData.get('feesPaid'),
+                paymentScreenshot: formData.get('paymentScreenshot'),
+                parentsLunch: formData.get('parentsLunch') || 'No',
+                parentsCount: formData.get('parentsCount') || '0',
+                email: formData.get('email') || '',
+                schoolName: formData.get('schoolName') || '',
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                // Replace with your actual Google Apps Script Web App URL
+                const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    // Success
+                    loading.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                loading.style.display = 'none';
+                errorMessage.style.display = 'block';
+                document.getElementById('errorText').textContent = 'Unable to submit registration. Please check your internet connection and try again.';
+                
+                // Scroll to error message
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                }
+            });
+        });
+
+        // Auto-calculate age category based on date of birth
+        document.getElementById('dateOfBirth').addEventListener('change', function() {
+            const birthDate = new Date(this.value);
+            const today = new Date();
+            
+            if (birthDate >= new Date('2016-01-01')) {
+                document.querySelector('input[value="U-9 (Born on or after 01-01-2016)"]').checked = true;
+            } else if (birthDate >= new Date('2013-01-01')) {
+                document.querySelector('input[value="U-12 (Born on or after 01-01-2013)"]').checked = true;
+            } else if (birthDate >= new Date('2010-01-01')) {
+                document.querySelector('input[value="U-15 (Born on or after 01-01-2010)"]').checked = true;
+            } else {
+                document.querySelector('input[value="Open Category (All ages)"]').checked = true;
+            }
+        });
+    </script>
+</body>
+</html>
