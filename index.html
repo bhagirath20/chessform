@@ -466,6 +466,18 @@
             loading.style.display = 'block';
             
             // Prepare data for submission
+            const paymentFile = formData.get('paymentScreenshot');
+            let paymentScreenshotData = '';
+            
+            if (paymentFile && paymentFile.size > 0) {
+                // Convert file to base64 for transmission
+                paymentScreenshotData = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(paymentFile);
+                });
+            }
+            
             const data = {
                 fullName: formData.get('fullName'),
                 dateOfBirth: formData.get('dateOfBirth'),
@@ -475,7 +487,8 @@
                 fideRating: formData.get('fideRating') || '0',
                 whatsappNumber: formData.get('whatsappNumber'),
                 feesPaid: formData.get('feesPaid'),
-                paymentScreenshot: formData.get('paymentScreenshot'),
+                paymentScreenshot: paymentScreenshotData,
+                paymentFileName: paymentFile ? paymentFile.name : '',
                 parentsLunch: formData.get('parentsLunch') || 'No',
                 parentsCount: formData.get('parentsCount') || '0',
                 email: formData.get('email') || '',
